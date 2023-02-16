@@ -37,11 +37,18 @@ public class OXOController {
 // Set the owner of the cell to the current player in the game model
         gameModel.setCellOwner(row, col, currentPlayer);
 
-// Calculate the index of the next player in the game (by incrementing and wrapping around)
-        int nextPlayerIndex = (currentPlayerIndex + 1) % gameModel.getNumberOfPlayers();
+// Check for a win in all directions (horizontally, vertically and diagonally)
+        if (checkForWin(row, col)) {
+            gameModel.setWinner(currentPlayer);
+        } else if (gameModel.checkForDraw()) {
+            gameModel.setGameDrawn();
+        } else {
+            // Calculate the index of the next player in the game (by incrementing and wrapping around)
+            int nextPlayerIndex = (currentPlayerIndex + 1) % gameModel.getNumberOfPlayers();
 
-// Update the game model with the index of the next player
-        gameModel.setCurrentPlayerNumber(nextPlayerIndex);
+            // Update the game model with the index of the next player
+            gameModel.setCurrentPlayerNumber(nextPlayerIndex);
+        }
     }
 
     public void addRow() {
@@ -67,5 +74,90 @@ public class OXOController {
     }
 
     public void reset() {
+        // Clear the board and reinitialise the game state to the original settings
+        gameModel.reset();
+        gameModel.setCurrentPlayerNumber(0);
     }
+
+    public boolean checkForWin(int row, int col) {
+        OXOPlayer currentPlayer = gameModel.getCellOwner(row, col);
+        int winThreshold = gameModel.getWinThreshold();
+        int numberOfRows = gameModel.getNumberOfRows();
+        int numberOfColumns = gameModel.getNumberOfColumns();
+
+        // Check for horizontal win
+        int count = 1;
+        int c = col - 1;
+        while (c >= 0 && gameModel.getCellOwner(row, c) == currentPlayer) {
+            count++;
+            c--;
+        }
+        c = col + 1;
+        while (c < numberOfColumns && gameModel.getCellOwner(row, c) == currentPlayer) {
+            count++;
+            c++;
+        }
+        if (count >= winThreshold) {
+            return true;
+        }
+
+        // Check for vertical win
+        count = 1;
+        int r = row - 1;
+        while (r >= 0 && gameModel.getCellOwner(r, col) == currentPlayer) {
+            count++;
+            r--;
+        }
+        r = row + 1;
+        while (r < numberOfRows && gameModel.getCellOwner(r, col) == currentPlayer) {
+            count++;
+            r++;
+        }
+        if (count >= winThreshold) {
+            return true;
+        }
+
+        // Check for diagonal win (top-left to bottom-right)
+        count = 1;
+        r = row - 1;
+        c = col - 1;
+        while (r >= 0 && c >= 0 && gameModel.getCellOwner(r, c) == currentPlayer) {
+            count++;
+            r--;
+            c--;
+        }
+        r = row + 1;
+        c = col + 1;
+        while (r < numberOfRows && c < numberOfColumns && gameModel.getCellOwner(r, c) == currentPlayer) {
+            count++;
+            r++;
+            c++;
+        }
+        if (count >= winThreshold) {
+            return true;
+        }
+
+        // Check for diagonal win (bottom-left to top-right)
+        count = 1;
+        r = row + 1;
+        c = col - 1;
+        while (r < numberOfRows && c >= 0 && gameModel.getCellOwner(r, c) == currentPlayer) {
+            count++;
+            r++;
+            c--;
+        }
+        r = row - 1;
+        c = col + 1;
+        while (r >= 0 && c < numberOfColumns && gameModel.getCellOwner(r, c) == currentPlayer) {
+            count++;
+            r--;
+            c++;
+        }
+        if (count >= winThreshold) {
+            return true;
+        }
+
+        return false;
+    }
+
 }
