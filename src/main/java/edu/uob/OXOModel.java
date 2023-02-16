@@ -110,7 +110,7 @@ public class OXOModel {
     // Remove a row from the game board and update the cells accordingly
     public void removeRow() {
         int numberOfRows = getNumberOfRows();
-        if (numberOfRows > 2) {
+        if (numberOfRows > 3) {
             cells.remove(cells.size() - 1);
         }
     }
@@ -125,6 +125,29 @@ public class OXOModel {
 
     public void setGameDrawn() {
         gameDrawn = true;
+    }
+
+    public boolean checkForDraw() {
+        for (int row = 0; row < getNumberOfRows(); row++) {
+            for (int col = 0; col < getNumberOfColumns(); col++) {
+                if (getCellOwner(row, col) == null) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    public void reset() {
+        cells = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            ArrayList<OXOPlayer> row = new ArrayList<>();
+            for (int j = 0; j < 3; j++) {
+                row.add(null);
+            }
+            cells.add(row);
+        }
+        gameDrawn = false;
+        winner = null;
     }
 
     public boolean isGameDrawn() {
