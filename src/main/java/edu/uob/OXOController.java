@@ -45,15 +45,19 @@ public class OXOController {
     }
 
     public void addRow() {
+        gameModel.addRow();
     }
 
     public void removeRow() {
+        gameModel.removeRow();
     }
 
     public void addColumn() {
+        gameModel.addColumn();
     }
 
     public void removeColumn() {
+        gameModel.removeColumn();
     }
 
     public void increaseWinThreshold() {
