@@ -132,6 +132,9 @@ public class OXOModel {
         for (int row = 0; row < getNumberOfRows(); row++) {
             for (int col = 0; col < getNumberOfColumns(); col++) {
                 if (getCellOwner(row, col) == null) {
+                    if(gameDrawn){
+                        gameDrawn=false;
+                    }
                     return false;
                 }
             }
@@ -147,6 +150,7 @@ public class OXOModel {
             }
             cells.add(row);
         }
+        currentPlayerNumber = 0;
         gameDrawn = false;
         winner = null;
     }
