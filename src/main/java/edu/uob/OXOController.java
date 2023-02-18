@@ -21,7 +21,6 @@ public class OXOController {
         }
 
         // Invalid Identifier Character
-
         // Check the row identifier
         char rowChar = command.toUpperCase().charAt(0);
 
@@ -45,7 +44,7 @@ public class OXOController {
         // (by parsing it as a substring and subtracting 1), since the column is represented by a number (e.g. '2')
         int col = colChar - '1';
 
-        // Check if the cell is out of range
+        // Outside Range: Check if the cell is out of range
         if (row < 0 || row >= gameModel.getNumberOfRows()) {
             throw new OXOMoveException.OutsideCellRangeException(OXOMoveException.RowOrColumn.ROW, row);
         }
@@ -53,7 +52,7 @@ public class OXOController {
             throw new OXOMoveException.OutsideCellRangeException(OXOMoveException.RowOrColumn.COLUMN, col);
         }
 
-        // Check if the cell is already taken
+        // Already Taken: Check if the cell is already taken
         if (gameModel.getCellOwner(row, col) != null) {
             throw new OXOMoveException.CellAlreadyTakenException(row + 1, col + 1);
         }
@@ -62,25 +61,25 @@ public class OXOController {
         // Get the index of the current player in the game model
         int currentPlayerIndex = gameModel.getCurrentPlayerNumber();
 
-// Get the OXOPlayer object for the current player index
+        // Get the OXOPlayer object for the current player index
         OXOPlayer currentPlayer = gameModel.getPlayerByNumber(currentPlayerIndex);
 
 
-// Set the owner of the cell to the current player in the game model
+        // Set the owner of the cell to the current player in the game model
         gameModel.setCellOwner(row, col, currentPlayer);
 
-// Check for a win in all directions (horizontally, vertically and diagonally)
+        // Check for a win in all directions (horizontally, vertically and diagonally)
         if (checkForWin(row, col)) {
             gameModel.setWinner(currentPlayer);
+
         } else if (gameModel.checkForDraw()) {
             gameModel.setGameDrawn();
-        } else {
-            // Calculate the index of the next player in the game (by incrementing and wrapping around)
-            int nextPlayerIndex = (currentPlayerIndex + 1) % gameModel.getNumberOfPlayers();
-
-            // Update the game model with the index of the next player
-            gameModel.setCurrentPlayerNumber(nextPlayerIndex);
         }
+        // Calculate the index of the next player in the game (by incrementing and wrapping around)
+        int nextPlayerIndex = (currentPlayerIndex + 1) % gameModel.getNumberOfPlayers();
+
+        // Update the game model with the index of the next player
+        gameModel.setCurrentPlayerNumber(nextPlayerIndex);
     }
 
     public void addRow() {
