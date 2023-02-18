@@ -1,5 +1,7 @@
 package edu.uob;
 
+import java.util.Locale;
+
 public class OXOController {
     OXOModel gameModel;
 
@@ -8,17 +10,54 @@ public class OXOController {
     }
 
     public void handleIncomingCommand(String command) throws OXOMoveException {
-        if(gameModel.getWinner() != null){
+        if (gameModel.getWinner() != null) {
             return;
         }
-//        int currentPlayerIndex = gameModel.getCurrentPlayerNumber();
-//        OXOPlayer currentPlayer = gameModel.getPlayerByNumber(currentPlayerIndex);
-//        String input = command.toLowerCase();
-//        int row = input.charAt(0) - 'a';
-//        int col = Integer.parseInt(input.substring(1))-1;
-//        gameModel.setCellOwner(row,col,currentPlayer);
-//        int nextPlayerIndex = (currentPlayerIndex+1) % gameModel.getNumberOfPlayers();
-//        gameModel.setCurrentPlayerNumber(nextPlayerIndex);
+
+        // Invalid Identifier Length
+        // Check the length of the identifiers
+        if (command.length() != 2) {
+            throw new OXOMoveException.InvalidIdentifierLengthException(command.length());
+        }
+
+        // Invalid Identifier Character
+
+        // Check the row identifier
+        char rowChar = command.toUpperCase().charAt(0);
+
+        if (rowChar < 'A' || rowChar > 'Z') {
+            throw new OXOMoveException.InvalidIdentifierCharacterException(OXOMoveException.RowOrColumn.ROW, rowChar);
+        }
+
+        // Check the column identifier
+        char colChar = command.charAt(1);
+        if (colChar < '1' || colChar > '9') {
+            throw new OXOMoveException.InvalidIdentifierCharacterException(OXOMoveException.RowOrColumn.COLUMN, colChar);
+        }
+
+        // Convert the identifiers to integers
+
+        // Get the row of the cell by converting the first character of the input to an integer
+        // (by subtracting the ASCII value of 'a'), since the row is represented by a letter (e.g. 'b')
+        int row = rowChar - 'A';
+
+        // Get the column of the cell by converting the second character of the input to an integer
+        // (by parsing it as a substring and subtracting 1), since the column is represented by a number (e.g. '2')
+        int col = colChar - '1';
+
+        // Check if the cell is out of range
+        if (row < 0 || row >= gameModel.getNumberOfRows()) {
+            throw new OXOMoveException.OutsideCellRangeException(OXOMoveException.RowOrColumn.ROW, row);
+        }
+        if (col < 0 || col >= gameModel.getNumberOfColumns()) {
+            throw new OXOMoveException.OutsideCellRangeException(OXOMoveException.RowOrColumn.COLUMN, col);
+        }
+
+        // Check if the cell is already taken
+        if (gameModel.getCellOwner(row, col) != null) {
+            throw new OXOMoveException.CellAlreadyTakenException(row + 1, col + 1);
+        }
+
 
         // Get the index of the current player in the game model
         int currentPlayerIndex = gameModel.getCurrentPlayerNumber();
@@ -26,16 +65,6 @@ public class OXOController {
 // Get the OXOPlayer object for the current player index
         OXOPlayer currentPlayer = gameModel.getPlayerByNumber(currentPlayerIndex);
 
-// Convert the command input to lowercase
-        String input = command.toLowerCase();
-
-// Get the row of the cell by converting the first character of the input to an integer
-// (by subtracting the ASCII value of 'a'), since the row is represented by a letter (e.g. 'b')
-        int row = input.charAt(0) - 'a';
-
-// Get the column of the cell by converting the second character of the input to an integer
-// (by parsing it as a substring and subtracting 1), since the column is represented by a number (e.g. '2')
-        int col = Integer.parseInt(input.substring(1)) - 1;
 
 // Set the owner of the cell to the current player in the game model
         gameModel.setCellOwner(row, col, currentPlayer);
