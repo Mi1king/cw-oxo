@@ -100,9 +100,17 @@ public class OXOController {
     }
 
     public void increaseWinThreshold() {
+        int winThreshold = gameModel.getWinThreshold();
+        if (winThreshold < 9) {
+            gameModel.setWinThreshold(winThreshold+1);
+        }
     }
 
     public void decreaseWinThreshold() {
+        int winThreshold = gameModel.getWinThreshold();
+        if (winThreshold > 3) {
+            gameModel.setWinThreshold(winThreshold-1);
+        }
     }
 
     public void reset() {
