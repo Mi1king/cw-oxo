@@ -81,6 +81,9 @@ public class OXOModel {
     public void addColumn() {
         int numberOfRows = getNumberOfRows();
         int numberOfColumns = getNumberOfColumns();
+        if (numberOfColumns >= 9) {
+            return; // exit the method if the maximum column limit is reached
+        }
         for (int i = 0; i < numberOfRows; i++) {
             cells.get(i).add(null);
         }
@@ -90,6 +93,9 @@ public class OXOModel {
     public void addRow() {
         int numberOfRows = getNumberOfRows();
         int numberOfColumns = getNumberOfColumns();
+        if (numberOfRows >= 9) {
+            return; // exit the method if the maximum column limit is reached
+        }
         ArrayList<OXOPlayer> newRow = new ArrayList<>();
         for (int j = 0; j < numberOfColumns; j++) {
             newRow.add(null);

@@ -25,7 +25,7 @@ public class OXOController {
         // Check the row identifier
         char rowChar = command.toUpperCase().charAt(0);
 
-        if (rowChar < 'A' || rowChar > 'Z') {
+        if (rowChar < 'A' || rowChar > 'I') {
             throw new OXOMoveException.InvalidIdentifierCharacterException(OXOMoveException.RowOrColumn.ROW, rowChar);
         }
 
