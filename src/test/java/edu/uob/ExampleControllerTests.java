@@ -68,4 +68,52 @@ class ExampleControllerTests {
     // The next lins is a bit ugly, but it is the easiest way to test exceptions (soz)
     assertThrows(InvalidIdentifierLengthException.class, ()-> sendCommandToController("abc123"), failedTestComment);
   }
+  @Test
+  public void testInvalidIdentifierLengthException() {
+    String command = "aa1";
+    String expectedMessage = "Invalid identifier length for command: " + command;
+    assertThrows(InvalidIdentifierLengthException.class, () -> controller.handleIncomingCommand(command),expectedMessage);
+  }
+
+  @Test
+  public void testInvalidIdentifierLengthException2() {
+    String command = "a1\"";
+    String expectedMessage = "Invalid identifier length for command: " + command;
+    assertThrows(InvalidIdentifierLengthException.class, () -> controller.handleIncomingCommand(command),expectedMessage);
+  }
+
+  @Test
+  public void testInvalidIdentifierCharacterException() {
+    String command = "aB";
+    String expectedMessage = "Invalid identifier length for command: " + command;
+    assertThrows(InvalidIdentifierCharacterException.class, () -> controller.handleIncomingCommand(command),expectedMessage);
+  }
+  @Test
+  public void testInvalidIdentifierCharacterException2() {
+    String command = "11";
+    String expectedMessage = "Invalid identifier length for command: " + command;
+    assertThrows(InvalidIdentifierCharacterException.class, () -> controller.handleIncomingCommand(command),expectedMessage);
+  }
+
+  @Test
+  public void testCellAlreadyTakenException() throws OXOMoveException {
+    String command = "a1";
+    controller.handleIncomingCommand(command);
+    String expectedMessage = "Invalid identifier length for command: " + command;
+    assertThrows(CellAlreadyTakenException.class, () -> controller.handleIncomingCommand(command),expectedMessage);
+  }
+
+  @Test
+  public void testOutsideCellRangeExceptionROW() {
+    String command = "d1";
+    String expectedMessage = "Position 4 is out of range for ROW";
+    assertThrows(OutsideCellRangeException.class, () -> controller.handleIncomingCommand(command),expectedMessage);
+
+  }
+  @Test
+  public void testOutsideCellRangeExceptionCOLUMN() {
+    String command = "a4";
+    String expectedMessage = "Position 4 is out of range for COLUMN";
+    assertThrows(OutsideCellRangeException.class, () -> controller.handleIncomingCommand(command),expectedMessage);
+  }
 }
