@@ -116,4 +116,11 @@ class ExampleControllerTests {
     String expectedMessage = "Position 4 is out of range for COLUMN";
     assertThrows(OutsideCellRangeException.class, () -> controller.handleIncomingCommand(command),expectedMessage);
   }
+
+  @Test
+  public void testMulPlayer() {
+    model.addPlayer(new OXOPlayer('G'));
+    assertEquals(3,model.getNumberOfPlayers());
+  }
+
 }
