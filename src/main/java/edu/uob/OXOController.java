@@ -8,6 +8,9 @@ public class OXOController {
     }
 
     public void handleIncomingCommand(String command) throws OXOMoveException {
+        if(gameModel.getWinner() != null){
+            return;
+        }
 //        int currentPlayerIndex = gameModel.getCurrentPlayerNumber();
 //        OXOPlayer currentPlayer = gameModel.getPlayerByNumber(currentPlayerIndex);
 //        String input = command.toLowerCase();
